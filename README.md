@@ -69,29 +69,6 @@ There are four categories or sections: 1. Job, 2. Processing, 3. Training, 4. Mo
 3. **Training:** This section encodes the settings specific to the training. Primary settings are the "loss", "train_ratio" and "val_ratio" and "test_ratio". This can also be specified in the command line by --train_ratio, --val_ratio, --test_ratio.
 
 4. **Models:** This section encodes the settings specific to the model used, aka hyperparameters. Example hyperparameters are provided in the example config.yml. Only the settings for the model selected in the Job section will be used. Model settings which can be changed in the command line are: --epochs, --batch_size, and --lr.
-
-
-### Training and prediction on an unseen dataset
-
-This example provides instructions for a conventional ML task of training on an existing dataset, and using a trained model to provide predictions on an unseen dataset for screening. This assumes the model used is already sufficiently good at the task to be performed (with suitable model hyperparameters, etc.). The default hyperparameters can do a reasonably good job for testing purposes; for hyperparameter optimization refer to the next section.
-
-1. To run, MatDeepLearn requires: 
-	- A configuration file, config.yml, as described in the previous section. 
-	- A dataset directory containing structure files, a csv file containing structure ids and target properties (default: targets.csv), and optionally a json file containing elemental properties (default: atom_dict.json). Five example datasets are provided with all requisite files needed. Structure files can take any format supported by the Atomic Simulation Environment [(ASE)](https://wiki.fysik.dtu.dk/ase/) such as .cif, .xyz, POSCAR, and ASE's own .json format.
-
-2. It is then necessary to first train the ML model an on existing dataset with available target properties. A general example for training is:
-
-	```bash
-	python main.py --data_path='your_path_here' --job_name='my_training_job' --run_mode='Training' --model='DOS_STO' --save_model='True' --model_path='my_trained_model.pth'
-	```		
-	where "data_path" points to the path of the training dataset, "model" selects the model to use, and "run_mode" specifies training. Once finished, a "my_trained_model.pth" should be saved. 
-
-3. Run the prediction on an unseen dataset by:
-
-	```bash
-	python main.py --data_path='your_path_here_forpredict' --job_name="my_prediction_job" --run_mode='Predict' --model_path='my_trained_model.pth'
-	```		
-	where the "data_path" and "run_mode" are now updated, and the model path is specified. The predictions will then be saved to my_prediction_job_predicted_outputs.csv for analysis.
 	
 ### Hyperparameter optimization
 
