@@ -102,7 +102,7 @@ Processing:
 
 Training:     
     #Index of target column in targets.csv
-    target_index: 0
+    target_index: -1
     #Loss functions (from pytorch) examples: l1_loss, mse_loss, binary_cross_entropy
     loss: "l1_loss"   
     features_loss: "True"    

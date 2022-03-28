@@ -1,17 +1,15 @@
 
 
-# MatDeepLearn
+# MatDeepLearn_DOS
 
-MatDeepLearn is a platform for testing and using graph neural networks (GNNs) and other machine learning (ML) models for materials chemistry applications. MatDeepLearn takes in data in the form of atomic structures and their target properties, processes the data into graphs, trains the ML model of choice (optionally with hyperparameter optimization), and provides predictions on unseen data. It allows for different GNNs to be benchmarked on diverse datasets drawn from materials repositories as well as conventional training/prediction tasks. This package makes use of the [Pytorch-Geometric](https://github.com/rusty1s/pytorch_geometric) library, which provides powerful tools for GNN development and many prebuilt models readily available for use.
+This repo contains the code for predicting density of states (DOS) using a modified version of the MatDeepLearn code, as described in the paper "Physically informed machine learning prediction of electronic density of states"
 
-MatDeepLearn is currently under active development with more features to be added soon. Please <a href="#roadmap">contact</a> the developer(s) for bug fixes and feature requests.
+Please <a href="#roadmap">contact</a> the developer(s) for bug fixes and feature requests.
 
 ## Table of contents
 <ol>
 	<li><a href="#installation">Installation</a></li>
 	<li><a href="#usage">Usage</a></li>
-	<li><a href="#faq">FAQ</a></li>
-	<li><a href="#roadmap">Roadmap</a></li>
 	<li><a href="#license">License</a></li>
 	<li><a href="#acknowledgements">Acknowledgements</a></li>
 </ol>
@@ -46,21 +44,15 @@ Prerequisites are listed in requirements.txt. You will need two key packages, 1.
     
 ## Usage
 
-### Running your first calculation
+### Running a calculation
 
-This example provides instructions for a bare minimum calculation. We will run the example with a on a small dataset (the Pt subset dataset containing ~1000 entries). This is just a toy example to test if the package is installed and working. Procedure below:
-
-1. Go to MatDeepLearn/data/ and type
-	```bash
-	tar -xvf test_data.tar.gz 
-	```
-	to unpack the a test dataset of Pt clusters.
+1. Download the datasets as described in MatDeepLearn/data/ :
 	
-2.	Go to MatDeepLearn, type
+2.	To run the code, type:
 	```bash
-	python main.py --data_path=data/test_data
+	python main.py --data_path='your_path_here' --model='your_model_here'
 	```
-	where default settings will be used and configurations will be read from the provided config.yml.
+	where the settings will be read from the provided config.yml.
 	
 3. The program will begin training; on a regular CPU this should take ~10-20s per epoch. It is recommended to use GPUs which can provide a roughly ~5-20 times speedup, which is needed for the larger datasets. As default, the program will provide two outputs: (1) "my_model.pth" which is a saved model which can be used for predictions on new structures, (2) "myjob_train_job_XXX_outputs.csv" where XXX are train, val and test; these contain structure ids, targets and the predicted values from the last epoch of training and validation, and for the test set.
 
@@ -90,14 +82,14 @@ This example provides instructions for a conventional ML task of training on an 
 2. It is then necessary to first train the ML model an on existing dataset with available target properties. A general example for training is:
 
 	```bash
-	python main.py --data_path='XXX' --job_name="my_training_job" --run_mode='Training' --model='CGCNN_demo' --save_model='True' --model_path='my_trained_model.pth'
+	python main.py --data_path='your_path_here' --job_name='my_training_job' --run_mode='Training' --model='DOS_STO' --save_model='True' --model_path='my_trained_model.pth'
 	```		
 	where "data_path" points to the path of the training dataset, "model" selects the model to use, and "run_mode" specifies training. Once finished, a "my_trained_model.pth" should be saved. 
 
 3. Run the prediction on an unseen dataset by:
 
 	```bash
-	python main.py --data_path='YYY' --job_name="my_prediction_job" --run_mode='Predict' --model_path='my_trained_model.pth'
+	python main.py --data_path='your_path_here_forpredict' --job_name="my_prediction_job" --run_mode='Predict' --model_path='my_trained_model.pth'
 	```		
 	where the "data_path" and "run_mode" are now updated, and the model path is specified. The predictions will then be saved to my_prediction_job_predicted_outputs.csv for analysis.
 	
@@ -111,50 +103,9 @@ This example provides instructions for hyperparameter optimization.
 
 3. Assuming the search space is defined, we run hyperparameter optimization with :
 	```bash
-	python main.py --data_path=data/test_data --model='CGCNN_demo' --job_name="my_hyperparameter_job" --run_mode='Hyperparameter'
+	python main.py --data_path='your_path_here' --model='DOS_STO' --job_name="my_hyperparameter_job" --run_mode='Hyperparameter'
 	```		
 	this sets the run mode to hyperparameter optimization, with a set number of trials and concurrency. Concurrently sets the number of trials to be performed in parallel; this number should be higher than the number of available devices to avoid bottlenecking. The program should automatically detect number of GPUs and run on each device accordingly. Finally, an output will be written called "optimized_hyperparameters.json" which contains the hyperparameters for the model with the lowest test error. Raw results are saved in a directory called "ray_results."
-
-### Ensemble
-
-Ensemble functionality is provided here in the form of stacked models, where prediction output is the average of individual models. "ensemble_list" in the config.yml controls the list of individual models represented as a comma separated string.
-
-```bash
-python main.py --data_path=data/test_data --run_mode=Ensemble
-```		
-
-### Repeat trials
-
-Sometimes it is desirable to obtain performance averaged over many trials. Specify repeat_trials in the config.yml for how many trials to run.
-
-```bash
-python main.py --data_path=data/test_data --run_mode=Repeat
-```		
-
-### Cross validation
-
-Specify cv_folds in the config.yml for how many folds in the CV.
-
-```bash
-python main.py --data_path=data/test_data --run_mode=CV
-```		
-
-### Analysis
-
-This mode allows the visualization of graph-wide features with t-SNE.
-
-```bash
-python main.py --data_path=data/test_data --run_mode=Analysis --model_path=XXX
-```		
-    
-## FAQ
-
-
-
-## Roadmap
-
-TBA
-
 
 ## License
 
@@ -163,7 +114,7 @@ Distributed under the MIT License.
 
 ## Acknowledgements
 
-Contributors: Victor Fung, Eric Juarez, Jiaxin Zhang, Bobby Sumpter
+Contributors: Victor Fung, P. Ganesh, Bobby Sumpter
 
 ## Contact
 
