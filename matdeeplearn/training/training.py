@@ -53,8 +53,7 @@ def train(model, optimizer, loader, loss_method, loss_features, rank):
         features = process.get_dos_features(x, scaled_dos)
         features_loss = getattr(F, loss_method)(data.dos_features, features.to(data.dos_features.device))
         if loss_features == "True":
-            #loss_sum = dos_loss + scaling_loss * 0.05 + dos_cumsum_loss * 0.005 + features_loss * 0.15
-            loss_sum = dos_loss + scaling_loss * 0.05 + dos_cumsum_loss * 0.005 + features_loss * 1
+            loss_sum = dos_loss + scaling_loss * 0.05 + dos_cumsum_loss * 0.005 + features_loss * 0.15
         else:        
             loss_sum = dos_loss + scaling_loss * 0.05 + dos_cumsum_loss * 0.005 
           
@@ -95,7 +94,7 @@ def evaluate(loader, model, loss_method, loss_features, rank, out=False, subset=
             features = process.get_dos_features(x, scaled_dos)
             features_loss = getattr(F, loss_method)(data.dos_features, features.to(data.dos_features.device))            
             if loss_features == "True":
-                loss_sum = dos_loss + scaling_loss * 0.05 + dos_cumsum_loss * 0.005 + features_loss * 1
+                loss_sum = dos_loss + scaling_loss * 0.05 + dos_cumsum_loss * 0.005 + features_loss * 0.15
             else:        
                 loss_sum = dos_loss + scaling_loss * 0.05 + dos_cumsum_loss * 0.005 
             
